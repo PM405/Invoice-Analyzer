@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>InvoiceAI | Intelligent Invoice Analysis</title>
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <style>
+
+        :root {
+            --primary: #5b5bf7;
+            --primary-dark: #4646d8;
+            --dark: #111827;
+            --muted: #6b7280;
+            --light-bg: #f6f7fb;
+            --border: #e5e7eb;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: var(--light-bg);
+            color: var(--dark);
+        }
+
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+            color: white;
+            font-size: 21px;
+        }
+
+
+        .brand-name {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            display: block;
+            margin-top: -3px;
+        }
+
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 75px 0 110px;
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(99, 102, 241, 0.15),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 85% 10%,
+                    rgba(139, 92, 246, 0.15),
+                    transparent 30%
+                ),
+                #ffffff;
+        }
+
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 50px;
+            background: #f0f0ff;
+            color: #4f46e5;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .hero h1 {
+            max-width: 850px;
+            margin: 20px auto 15px;
+            font-size: clamp(
+                38px,
+                6vw,
+                68px
+            );
+            line-height: 1.05;
+            font-weight: 850;
+            letter-spacing: -3px;
+        }
+
+
+        .hero h1 span {
+            background: linear-gradient(
+                90deg,
+                #4f46e5,
+                #9333ea
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .hero-description {
+            max-width: 650px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+
+        .hero-buttons {
+            margin-top: 30px;
+        }
+
+
+        .main-section {
+            margin-top: -60px;
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .analyzer-card {
+            border: 0;
+            border-radius: 28px;
+            box-shadow:
+                0 25px 70px rgba(31, 41, 55, 0.12);
+            overflow: hidden;
+        }
+
+
+        .card-heading {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+
+        .card-description {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+
+        .upload-box {
+            position: relative;
+            border: 2px dashed #cfd4df;
+            border-radius: 20px;
+            padding: 50px 25px;
+            text-align: center;
+            cursor: pointer;
+            background: #fafbff;
+            transition: all 0.25s ease;
+        }
+
+
+        .upload-box:hover,
+        .upload-box.dragover {
+            border-color: var(--primary);
+            background: #f3f3ff;
+            transform: translateY(-2px);
+        }
+
+
+        .upload-icon {
+            width: 70px;
+            height: 70px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: #e9e9ff;
+            color: var(--primary);
+            font-size: 32px;
+        }
+
+
+        .upload-title {
+            margin-top: 18px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+
+        .upload-text {
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+
+        .upload-format {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+
+        .preview-card {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #fafafa;
+        }
+
+
+        .preview-image {
+            display: block;
+            width: 100%;
+            max-height: 460px;
+            object-fit: contain;
+            background: #f1f3f5;
+        }
+
+
+        .preview-footer {
+            padding: 13px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+
+        .file-name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .question-label {
+            font-size: 15px;
+            font-weight: 750;
+        }
+
+
+        .question-box {
+            min-height: 125px;
+            resize: vertical;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 15px 17px;
+            box-shadow: none !important;
+        }
+
+
+        .question-box:focus {
+            border-color: var(--primary);
+        }
+
+
+        .quick-title {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .quick-btn {
+            border-radius: 50px;
+            font-size: 12px;
+            padding: 7px 13px;
+            margin: 3px 2px;
+        }
+
+
+        .analyze-btn {
+            border: 0;
+            border-radius: 15px;
+            min-height: 55px;
+            font-weight: 750;
+            background: linear-gradient(
+                135deg,
+                #5b5bf7,
+                #7c3aed
+            );
+            box-shadow:
+                0 10px 25px rgba(
+                    91,
+                    91,
+                    247,
+                    0.25
+                );
+        }
+
+
+        .analyze-btn:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(
+                135deg,
+                #4f4fe5,
+                #6d28d9
+            );
+        }
+
+
+        .result-card {
+            border: 0;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow:
+                0 15px 40px rgba(
+                    31,
+                    41,
+                    55,
+                    0.08
+                );
+        }
+
+
+        .result-header {
+            background: #111827;
+            color: white;
+            padding: 17px 20px;
+        }
+
+
+        .result-title {
+            font-weight: 750;
+        }
+
+
+        .result-body {
+            min-height: 120px;
+            white-space: pre-wrap;
+            line-height: 1.75;
+            color: #374151;
+            padding: 22px;
+        }
+
+
+        .copy-btn {
+            border-radius: 9px;
+        }
+
+
+        .feature-section {
+            padding: 90px 0;
+        }
+
+
+        .section-title {
+            font-size: 35px;
+            font-weight: 850;
+            letter-spacing: -1px;
+        }
+
+
+        .section-subtitle {
+            color: var(--muted);
+            max-width: 600px;
+            margin: auto;
+        }
+
+
+        .feature-card {
+            height: 100%;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: white;
+            padding: 28px;
+            transition: 0.25s;
+        }
+
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 15px 35px rgba(
+                    31,
+                    41,
+                    55,
+                    0.08
+                );
+        }
+
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: #f0f0ff;
+            color: var(--primary);
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+
+        .feature-card h5 {
+            font-weight: 800;
+        }
+
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+
+        footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 28px 0;
+        }
+
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        @media (max-width: 768px) {
+
+            .hero {
+                padding: 55px 0 95px;
+            }
+
+
+            .hero h1 {
+                letter-spacing: -1.5px;
+            }
+
+
+            .hero-description {
+                font-size: 16px;
+            }
+
+
+            .main-section {
+                margin-top: -50px;
+            }
+
+
+            .analyzer-card {
+                border-radius: 20px;
+            }
+
+
+            .upload-box {
+                padding: 38px 18px;
+            }
+
+
+            .feature-section {
+                padding: 65px 0;
+            }
+
+        }
+
+
+        @media (max-width: 576px) {
+
+            .navbar-text {
+                display: none;
+            }
+
+
+            .container {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+
+            .hero {
+                padding: 45px 0 85px;
+            }
+
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+
+            .hero-buttons .btn {
+                width: 100%;
+            }
+
+
+            .card-body {
+                padding: 22px !important;
+            }
+
+
+            .upload-box {
+                padding: 32px 15px;
+            }
+
+
+            .upload-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 27px;
+            }
+
+
+            .preview-image {
+                max-height: 330px;
+            }
+
+
+            .preview-footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+
+            .preview-footer .btn {
+                width: 100%;
+            }
+
+
+            .quick-btn {
+                width: 100%;
+                margin: 4px 0;
+            }
+
+
+            .section-title {
+                font-size: 29px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar navbar-expand-lg sticky-top">
+
+    <div class="container py-2">
+
+        <a
+            href="/"
+            class="navbar-brand d-flex align-items-center gap-2"
+        >
+
+            <span class="brand-icon">
+                <i class="bi bi-receipt"></i>
+            </span>
+
+            <span>
+
+                <span class="brand-name d-block">
+                    InvoiceAI
+                </span>
+
+                <span class="brand-subtitle">
+                    Intelligent Invoice Analysis
+                </span>
+
+            </span>
+
+        </a>
+
+
+        <span class="navbar-text">
+            <i class="bi bi-stars me-1"></i>
+            Powered by Gemini AI
+        </span>
+
+    </div>
+
+</nav>
+
+
+
+<section class="hero">
+
+    <div class="container text-center">
+
+        <span class="hero-badge">
+            <i class="bi bi-stars"></i>
+            AI-Powered Invoice Analysis
+        </span>
+
+
+        <h1>
+            Understand Your
+            <span>Invoices</span>
+            Instantly
+        </h1>
+
+
+        <p class="hero-description">
+            Upload an invoice, ask your question,
+            and let AI extract the information
+            you need in seconds.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="#analyzer"
+                class="btn btn-dark btn-lg px-4 rounded-pill"
+            >
+                Start Analyzing
+                <i class="bi bi-arrow-down ms-2"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section
+    id="analyzer"
+    class="main-section"
+>
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-xl-9 col-lg-10">
+
+
+                <div class="card analyzer-card">
+
+                    <div class="card-body p-4 p-md-5">
+
+
+                        <div class="mb-4">
+
+                            <h2 class="card-heading mb-1">
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                Invoice Analyzer
+                            </h2>
+
+                            <p class="card-description mb-0">
+                                Upload your invoice and ask
+                                Gemini anything about it.
+                            </p>
+
+                        </div>
+
+
+
+                        <form id="invoiceForm">
+
+
+                            <input
+                                type="file"
+                                id="invoice"
+                                name="invoice"
+                                accept=".jpg,.jpeg,.png,.webp"
+                                class="d-none"
+                            >
+
+
+                            <label
+                                for="invoice"
+                                id="uploadBox"
+                                class="upload-box w-100"
+                            >
+
+                                <div class="upload-icon">
+
+                                    <i class="bi bi-cloud-arrow-up"></i>
+
+                                </div>
+
+
+                                <div class="upload-title">
+                                    Upload Your Invoice
+                                </div>
+
+
+                                <p class="upload-text">
+                                    Click to browse or drag
+                                    and drop your image here
+                                </p>
+
+
+                                <span class="upload-format">
+                                    JPG • JPEG • PNG • WEBP
+                                </span>
+
+                            </label>
+
+
+
+                            <div
+                                id="previewContainer"
+                                class="preview-card mt-4 hidden"
+                            >
+
+                                <img
+                                    id="previewImage"
+                                    class="preview-image"
+                                    alt="Invoice Preview"
+                                >
+
+
+                                <div class="preview-footer">
+
+                                    <div class="d-flex align-items-center gap-2 min-width-0">
+
+                                        <i class="bi bi-file-earmark-image"></i>
+
+                                        <span
+                                            id="fileName"
+                                            class="file-name"
+                                        ></span>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        id="removeFile"
+                                        class="btn btn-outline-danger btn-sm"
+                                    >
+                                        <i class="bi bi-trash me-1"></i>
+                                        Remove
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="mt-4">
+
+                                <label
+                                    for="question"
+                                    class="question-label mb-2"
+                                >
+                                    <i class="bi bi-chat-left-text me-1"></i>
+                                    What would you like to know?
+                                </label>
+
+
+                                <textarea
+                                    id="question"
+                                    name="question"
+                                    class="form-control question-box"
+                                    placeholder="Example: What is the total amount of this invoice?"
+                                ></textarea>
+
+                            </div>
+
+
+
+                            <div class="mt-3">
+
+                                <div class="quick-title mb-2">
+                                    Quick questions
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary quick-btn example-btn"
+                                    data-question="What is the invoice number?"
+                                >
+                                    Invoice Number
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary quick-btn example-btn"
+                                    data-question="What is the total amount?"
+                                >
+                                    Total Amount
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary quick-btn example-btn"
+                                    data-question="List all products and their prices."
+                                >
+                                    Products & Prices
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary quick-btn example-btn"
+                                    data-question="What taxes are included in this invoice?"
+                                >
+                                    Taxes
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary quick-btn example-btn"
+                                    data-question="What is the invoice date?"
+                                >
+                                    Invoice Date
+                                </button>
+
+                            </div>
+
+
+
+                            <button
+                                type="submit"
+                                id="analyzeButton"
+                                class="btn btn-primary analyze-btn w-100 mt-4"
+                            >
+
+                                <span id="buttonText">
+                                    <i class="bi bi-stars me-2"></i>
+                                    Analyze Invoice
+                                </span>
+
+
+                                <span
+                                    id="loader"
+                                    class="spinner-border spinner-border-sm d-none ms-2"
+                                ></span>
+
+                            </button>
+
+
+                        </form>
+
+
+
+                        <div
+                            id="message"
+                            class="alert d-none mt-4 mb-0"
+                        ></div>
+
+
+
+                        <div
+                            id="resultSection"
+                            class="result-card mt-4 hidden"
+                        >
+
+                            <div
+                                class="result-header d-flex justify-content-between align-items-center gap-2"
+                            >
+
+                                <div class="result-title">
+                                    <i class="bi bi-stars me-2"></i>
+                                    Gemini AI Response
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    id="copyButton"
+                                    class="btn btn-light btn-sm copy-btn"
+                                >
+                                    <i class="bi bi-copy me-1"></i>
+                                    Copy
+                                </button>
+
+                            </div>
+
+
+                            <div
+                                id="result"
+                                class="result-body"
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section class="feature-section">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="hero-badge mb-3">
+                Simple & Powerful
+            </span>
+
+            <h2 class="section-title">
+                Everything You Need
+            </h2>
+
+            <p class="section-subtitle mt-3">
+                Extract useful information from invoices
+                without manually reading every detail.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-image"></i>
+                    </div>
+
+                    <h5>
+                        Image Understanding
+                    </h5>
+
+                    <p>
+                        Upload invoice images and let AI
+                        understand their visible content.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+
+                    <h5>
+                        Ask Questions
+                    </h5>
+
+                    <p>
+                        Ask natural-language questions
+                        about invoice details.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+
+                    <h5>
+                        Fast AI Analysis
+                    </h5>
+
+                    <p>
+                        Get useful answers quickly using
+                        Gemini's multimodal capabilities.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="container text-center">
+
+        <div class="mb-2">
+            <strong class="text-white">
+                InvoiceAI
+            </strong>
+        </div>
+
+        <small>
+            Intelligent Invoice Analysis System
+            • Powered by Gemini AI
+        </small>
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+    const invoiceInput =
+        document.getElementById("invoice");
+
+
+    const uploadBox =
+        document.getElementById("uploadBox");
+
+
+    const previewContainer =
+        document.getElementById("previewContainer");
+
+
+    const previewImage =
+        document.getElementById("previewImage");
+
+
+    const fileName =
+        document.getElementById("fileName");
+
+
+    const removeFile =
+        document.getElementById("removeFile");
+
+
+    const question =
+        document.getElementById("question");
+
+
+    const form =
+        document.getElementById("invoiceForm");
+
+
+    const analyzeButton =
+        document.getElementById("analyzeButton");
+
+
+    const buttonText =
+        document.getElementById("buttonText");
+
+
+    const loader =
+        document.getElementById("loader");
+
+
+    const message =
+        document.getElementById("message");
+
+
+    const resultSection =
+        document.getElementById("resultSection");
+
+
+    const result =
+        document.getElementById("result");
+
+
+    const copyButton =
+        document.getElementById("copyButton");
+
+
+
+    invoiceInput.addEventListener(
+        "change",
+        function () {
+
+            const file = this.files[0];
+
+            showPreview(file);
+
+        }
+    );
+
+
+
+    function showPreview(file) {
+
+        if (!file) {
+            return;
+        }
+
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+
+        if (!allowedTypes.includes(file.type)) {
+
+            showMessage(
+                "Please select a JPG, JPEG, PNG or WEBP image.",
+                "danger"
+            );
+
+            invoiceInput.value = "";
+
+            return;
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event) {
+
+                previewImage.src =
+                    event.target.result;
+
+                fileName.textContent =
+                    file.name;
+
+                previewContainer
+                    .classList
+                    .remove("hidden");
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
+
+
+
+    uploadBox.addEventListener(
+        "dragover",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadBox.classList.add(
+                "dragover"
+            );
+
+        }
+    );
+
+
+
+    uploadBox.addEventListener(
+        "dragleave",
+        function () {
+
+            uploadBox.classList.remove(
+                "dragover"
+            );
+
+        }
+    );
+
+
+
+    uploadBox.addEventListener(
+        "drop",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadBox.classList.remove(
+                "dragover"
+            );
+
+
+            const file =
+                event.dataTransfer.files[0];
+
+
+            if (file) {
+
+                invoiceInput.files =
+                    event.dataTransfer.files;
+
+                showPreview(file);
+
+            }
+
+        }
+    );
+
+
+
+    removeFile.addEventListener(
+        "click",
+        function () {
+
+            invoiceInput.value = "";
+
+            previewImage.src = "";
+
+            fileName.textContent = "";
+
+            previewContainer
+                .classList
+                .add("hidden");
+
+        }
+    );
+
+
+
+    document
+        .querySelectorAll(".example-btn")
+        .forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        question.value =
+                            this.dataset.question;
+
+                        question.focus();
+
+                    }
+                );
+
+            }
+        );
+
+
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            message.className =
+                "alert d-none";
+
+
+            resultSection
+                .classList
+                .add("hidden");
+
+
+            const file =
+                invoiceInput.files[0];
+
+
+            const userQuestion =
+                question.value.trim();
+
+
+            if (!file) {
+
+                showMessage(
+                    "Please upload an invoice image first.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            if (!userQuestion) {
+
+                showMessage(
+                    "Please enter your question.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "invoice",
+                file
+            );
+
+
+            formData.append(
+                "question",
+                userQuestion
+            );
+
+
+            setLoading(true);
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/analyze",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    showMessage(
+                        data.message ||
+                        "Something went wrong.",
+                        "danger"
+                    );
+
+                    return;
+                }
+
+
+                result.textContent =
+                    data.response;
+
+
+                resultSection
+                    .classList
+                    .remove("hidden");
+
+
+                resultSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+
+            } catch (error) {
+
+                showMessage(
+                    "Unable to connect to the server.",
+                    "danger"
+                );
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        }
+    );
+
+
+
+    copyButton.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    result.textContent
+                );
+
+
+                copyButton.innerHTML =
+                    '<i class="bi bi-check2 me-1"></i> Copied';
+
+
+                setTimeout(
+                    function () {
+
+                        copyButton.innerHTML =
+                            '<i class="bi bi-copy me-1"></i> Copy';
+
+                    },
+                    1500
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    "Unable to copy the response.",
+                    "warning"
+                );
+
+            }
+
+        }
+    );
+
+
+
+    function setLoading(loading) {
+
+        analyzeButton.disabled =
+            loading;
+
+
+        if (loading) {
+
+            buttonText.innerHTML =
+                '<i class="bi bi-stars me-2"></i> Analyzing Invoice';
+
+            loader.classList
+                .remove("d-none");
+
+        } else {
+
+            buttonText.innerHTML =
+                '<i class="bi bi-stars me-2"></i> Analyze Invoice';
+
+            loader.classList
+                .add("d-none");
+
+        }
+
+    }
+
+
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        message.textContent =
+            text;
+
+        message.className =
+            "alert alert-" + type;
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
+
